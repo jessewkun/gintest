@@ -7,7 +7,6 @@ log:
   logprefix: "gintest"
   trace: true
   level: 5
-  logroll: ""
   formatter: "json"
 
 mysql:

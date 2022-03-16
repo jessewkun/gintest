@@ -13,7 +13,11 @@ const ERROR_NEWCIPHER_FAIL = 10007
 const ERROR_DECOCDE_FAIL = 10008
 
 // 业务错误
-const ERROR_ADD_USER_FAIL = 20000
+const ERROR_LIST_USER_FAIL = 20000
+const ERROR_ONE_USER_FAIL = 20001
+const ERROR_ADD_USER_FAIL = 20002
+const ERROR_DEL_USER_FAIL = 20003
+const ERROR_MOD_USER_FAIL = 20004
 
 var ERROR_MESSAGE_MAP = map[int]string{
 	SUCC_RESPONSE:            "succ",
@@ -27,5 +31,9 @@ var ERROR_MESSAGE_MAP = map[int]string{
 	ERROR_NEWCIPHER_FAIL:     "加密初始化失败",
 	ERROR_DECOCDE_FAIL:       "解码失败",
 
-	ERROR_ADD_USER_FAIL: "user add fail",
+	ERROR_LIST_USER_FAIL: "list user fail",
+	ERROR_ONE_USER_FAIL:  "get user fail",
+	ERROR_ADD_USER_FAIL:  "user add fail",
+	ERROR_DEL_USER_FAIL:  "delete user fail",
+	ERROR_MOD_USER_FAIL:  "modify user fail",
 }

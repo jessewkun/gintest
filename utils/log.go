@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -21,8 +20,6 @@ type Logger struct {
 	IsTrace bool `yaml:"trace"`
 	// 日志级别
 	Level uint32 `yaml:"level"`
-	// 日志滚动  day 按天 hour 按小时
-	LogRoll string `yaml:"logroll"`
 	// 日志格式 text json
 	Formatter string `yaml:"formatter"`
 	Logrus    *logrus.Logger
@@ -30,13 +27,8 @@ type Logger struct {
 
 // 初始化日志
 func InitLogger(l *Logger) {
-	now := time.Now()
 	if err := os.MkdirAll(l.LogPath, 0777); err != nil {
 		fmt.Println("日志目录创建失败：" + err.Error())
-		os.Exit(1)
-	}
-	if l.LogRoll != "" && l.LogRoll != "day" && l.LogRoll != "hour" {
-		fmt.Println("日志滚动参数配置错误")
 		os.Exit(1)
 	}
 	if len(l.Formatter) < 1 {
@@ -47,15 +39,7 @@ func InitLogger(l *Logger) {
 		os.Exit(1)
 	}
 
-	logFileName := ""
-	switch l.LogRoll {
-	case "":
-		logFileName = l.LogPrefix + ".log"
-	case "day":
-		logFileName = l.LogPrefix + "-" + now.Format("2006-01-02") + ".log"
-	case "hour":
-		logFileName = l.LogPrefix + "-" + now.Format("2006-01-02-15") + ".log"
-	}
+	logFileName := l.LogPrefix + ".log"
 
 	fileName := path.Join(l.LogPath, logFileName)
 	if _, err := os.Stat(fileName); err != nil {

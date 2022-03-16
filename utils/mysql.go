@@ -20,15 +20,7 @@ type Mysql struct {
 	MaxOpenConn int `yaml:"max_open_conn"`
 }
 
-type DBConn struct {
-	DB *gorm.DB
-}
-
-func GetDB() *gorm.DB {
-	return DB.DB
-}
-
-var DB *DBConn
+var DB *gorm.DB
 
 func InitDB(m *Mysql) {
 	db, err := gorm.Open(mysql.Open(m.Dsn), &gorm.Config{
@@ -56,13 +48,11 @@ func InitDB(m *Mysql) {
 	// 获取sql配置情况
 	sqlStats, _ := json.Marshal(sqlDB.Stats())
 	fmt.Println(string(sqlStats))
-	DB = &DBConn{
-		DB: db,
-	}
+	DB = db
 }
 
-func (db DBConn) Close() {
-	sqlDB, err := db.DB.DB()
+func CloseDb() {
+	sqlDB, err := DB.DB()
 	if err != nil {
 		_ = sqlDB.Close()
 		fmt.Println("mysql close error: " + err.Error())

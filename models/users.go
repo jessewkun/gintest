@@ -17,16 +17,43 @@ func (u *User) TableName() string {
 	return "user"
 }
 
-// 添加用户
 func (u *User) Add(params *params.ParamsAddUser) (int, error) {
 	data := User{
 		Name: params.Name,
 		Age:  params.Age,
 		Sex:  params.Sex,
 	}
-	result := utils.GetDB().Create(&data)
+	result := utils.DB.Create(&data)
 	if result.Error != nil {
 		return 0, result.Error
 	}
 	return data.ID, nil
+}
+
+func (u *User) List() (*[]User, error) {
+	users := &[]User{}
+	err := utils.DB.Where(u).Find(users).Error
+	if err != nil {
+		return &[]User{}, err
+	}
+	return users, nil
+}
+
+func (u *User) One() error {
+	err := utils.DB.Where(u).First(u).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *User) Delete() int64 {
+	return utils.DB.Where(u).Delete(u).RowsAffected
+}
+
+func (u *User) Update(params params.ParamsModifyUser) error {
+	if err := utils.DB.Model(u).Updates(params).Error; err != nil {
+		return err
+	}
+	return nil
 }

@@ -44,7 +44,7 @@ func main() {
 
 	utils.InitLogger(common.CConfig.Log)
 	utils.InitDB(common.CConfig.Mysql)
-	defer utils.DB.Close()
+	defer utils.CloseDb()
 
 	gin.SetMode(common.CConfig.Env)
 	r := gin.New()
