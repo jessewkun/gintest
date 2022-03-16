@@ -17,17 +17,12 @@ var (
 	help       bool
 	version    bool
 	configfile string
-	ginMode    string
 )
 
 func initFlag() {
 	flag.BoolVar(&help, "h", false, "show help")
 	flag.BoolVar(&version, "v", false, "show version")
 	flag.StringVar(&configfile, "c", "config.yml", "config file path\n")
-	flag.StringVar(&ginMode, "m", "debug", `gin mode
-"debug" indicates gin mode is debug.
-"release" indicates gin mode is release.
-"test" indicates gin mode is test.`+"\n")
 	flag.Usage = config.Usage
 
 	flag.Parse()
@@ -36,7 +31,7 @@ func initFlag() {
 		os.Exit(0)
 	}
 	if version {
-		fmt.Println(config.PROJECT_NAME + "/" + config.VERSION)
+		fmt.Println(config.PROJECT_NAME + "/" + config.COMMIT_SHA1)
 		os.Exit(0)
 	}
 }
@@ -49,8 +44,9 @@ func main() {
 
 	utils.InitLogger(common.CConfig.Log)
 	utils.InitDB(common.CConfig.Mysql)
+	defer utils.DB.Close()
 
-	gin.SetMode(ginMode)
+	gin.SetMode(common.CConfig.Env)
 	r := gin.New()
 	r.Use(gin.Recovery())
 

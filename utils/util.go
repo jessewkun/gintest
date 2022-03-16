@@ -22,6 +22,7 @@ func MicroSecond() int64 {
 	return time.Now().UnixNano() / 1000000
 }
 
+// 获取 hostname
 func HostName() string {
 	hostname, err := os.Hostname()
 	if err != nil {
@@ -30,6 +31,7 @@ func HostName() string {
 	return hostname
 }
 
+// 获取本机 ip
 func Ip() (ip string, err error) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {

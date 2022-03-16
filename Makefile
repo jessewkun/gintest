@@ -1,16 +1,14 @@
-# export GOPROXY=http://goproxy.xesv5.com
+# export GOPROXY=http://goproxy.cn
 GO := GO111MODULE=on go
 CUR_PWD := $(shell pwd)
 BINARY_NAME = gintest
 PROJECT_URL = ""
 CONFIG_NAME = $(CUR_PWD)/config.yaml
-VERSION := $(shell git rev-list HEAD | head -1)
 COMMIT_SHA1 := $(shell git rev-parse HEAD )
 BUILD_TIME := $(shell date +%Y-%m-%d\ %H:%M:%S)
 
 LD_FLAGS=" -X '$(BINARY_NAME)/config.PROJECT_NAME=$(BINARY_NAME)' \
 	-X '$(BINARY_NAME)/config.PROJECT_URL=$(PROJECT_URL)' \
-	-X '$(BINARY_NAME)/config.VERSION=$(VERSION)' \
 	-X '$(BINARY_NAME)/config.COMMIT_SHA1=$(COMMIT_SHA1)' \
 	-X '$(BINARY_NAME)/config.BUILD_TIME=$(BUILD_TIME)'"
 
@@ -44,7 +42,6 @@ dev: clean main.go go.sum go.mod
 	@cp $(CUR_PWD)/config/config.dev.yaml $(CONFIG_NAME)
 	@$(GO) build -o $(BINARY_NAME) -ldflags $(LD_FLAGS)
 	@echo "<<< [dev] $(BINARY_NAME) build success"
-	@echo "Version: $(BUILD_VERSION)"
 	@echo "Build Time: $(BUILD_TIME)"
 	@echo "Commit_SHA1: $(COMMIT_SHA1)"
 
@@ -53,7 +50,6 @@ test: clean main.go go.sum go.mod
 	@cp $(CUR_PWD)/config/config.test.yaml $(CONFIG_NAME)
 	@$(GO) build -o $(BINARY_NAME) -ldflags $(LD_FLAGS)
 	@echo "<<< [test] $(BINARY_NAME) build success"
-	@echo "Version: $(BUILD_VERSION)"
 	@echo "Build Time: $(BUILD_TIME)"
 	@echo "Commit_SHA1: $(COMMIT_SHA1)"
 
@@ -62,7 +58,6 @@ release: clean main.go go.sum go.mod
 	@cp $(CUR_PWD)/config/config.release.yaml $(CONFIG_NAME)
 	@$(GO) build -o -w -s $(BINARY_NAME) -ldflags $(LD_FLAGS) -gcflags "-N" -o
 	@echo "<<< [release] $(BINARY_NAME) build success"
-	@echo "Version: $(BUILD_VERSION)"
 	@echo "Build Time: $(BUILD_TIME)"
 	@echo "Commit_SHA1: $(COMMIT_SHA1)"
 

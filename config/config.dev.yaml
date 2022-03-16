@@ -1,4 +1,4 @@
-env: dev
+env: debug
 
 port: ":8000"
 
