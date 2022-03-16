@@ -62,7 +62,6 @@ func OneHandler(c *gin.Context) *utils.APIException {
 	}{User: user})
 }
 
-// TODO
 func ModifyHandler(c *gin.Context) *utils.APIException {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -84,7 +83,7 @@ func ModifyHandler(c *gin.Context) *utils.APIException {
 
 	err = user.Update(params)
 	if err != nil {
-		return utils.NewAPIException(config.ERROR_MOD_USER_FAIL, nil)
+		return utils.NewAPIException(config.ERROR_MOD_USER_FAIL, err)
 	}
 
 	return utils.SuccResp("", struct {
@@ -100,7 +99,10 @@ func DeleteHandler(c *gin.Context) *utils.APIException {
 	user := &models.User{
 		ID: id,
 	}
-	rows := user.Delete()
+	rows, err := user.Delete()
+	if err != nil {
+		return utils.NewAPIException(config.ERROR_DEL_USER_FAIL, err)
+	}
 	if rows < 1 {
 		return utils.NewAPIException(config.ERROR_DEL_USER_FAIL, nil)
 	}

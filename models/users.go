@@ -3,6 +3,8 @@ package models
 import (
 	"gintest/common/params"
 	"gintest/utils"
+
+	"github.com/jinzhu/copier"
 )
 
 type User struct {
@@ -47,12 +49,19 @@ func (u *User) One() error {
 	return nil
 }
 
-func (u *User) Delete() int64 {
-	return utils.DB.Where(u).Delete(u).RowsAffected
+func (u *User) Delete() (int64, error) {
+	tx := utils.DB.Where(u).First(u)
+	if tx.Error != nil {
+		return 0, tx.Error
+	}
+	return tx.RowsAffected, nil
 }
 
 func (u *User) Update(params params.ParamsModifyUser) error {
-	if err := utils.DB.Model(u).Updates(params).Error; err != nil {
+	// update 的时候 model 和 Updates 必须是相同的结构体
+	var updates User
+	copier.Copy(&updates, &params)
+	if err := utils.DB.Model(u).Updates(&updates).Error; err != nil {
 		return err
 	}
 	return nil
